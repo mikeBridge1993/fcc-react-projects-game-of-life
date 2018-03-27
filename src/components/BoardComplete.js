@@ -7,7 +7,7 @@ export default class BoardComplete extends React.Component  {
   constructor(props) {
     super(props);
     this.initialSquares = 300;
-    this.sqr = 25;
+    this.sqr = 40;
 
     this.defaultState = {
       alive: Array.from({length: this.initialSquares}, () => ""+Math.floor(Math.random() * Math.pow(this.sqr, 2)+1)).filter((elem, pos, arr) => arr.indexOf(elem) == pos).sort((a,b) => a-b),
@@ -15,8 +15,6 @@ export default class BoardComplete extends React.Component  {
     }
 
     this.state = this.defaultState;
-    
-    console.log(this.state.alive)
     
     this.boardComplete = [];
     let boardRow;
@@ -31,7 +29,7 @@ export default class BoardComplete extends React.Component  {
           squareClass += " alive-true"
         }
 
-        boardRow.push(<BoardSquare squareClass={squareClass} onClick={this.onClick} key={id}  id={id}/>)
+        boardRow.push(<BoardSquare squareClass={squareClass} onSquareClick={this.onSquareClick} key={id}  id={id}/>)
       }
         this.boardComplete.push(
           <div className="d-flex align-items-center justify-content-center flex-row mx-auto" key={"row-" + i}>
@@ -48,6 +46,11 @@ export default class BoardComplete extends React.Component  {
         });
       }
     }
+    
+  }
+
+  componentDidMount () {
+    this.onRun();
   }
 
   runGenerations = () => {
@@ -75,9 +78,6 @@ export default class BoardComplete extends React.Component  {
     let elementsThatWereBorn = cellsToLive.filter((el) => {
       return this.state.alive.indexOf(el) <0;
     })
-
-    console.log("died", elementsThatDied)
-    console.log("born", elementsThatWereBorn)
     
     if(elementsThatDied.length>0){
       for(let i=0; i< elementsThatDied.length; i++) {
@@ -90,11 +90,8 @@ export default class BoardComplete extends React.Component  {
         document.getElementById(elementsThatWereBorn[j]).classList.toggle('alive-true')
       }  
     }
-    console.log(this.state)
-    console.log(cellsToLive)
-    this.setState(
-      {alive: cellsToLive,
-    generation: this.state.generation+1});
+
+    this.setState({alive: cellsToLive, generation: this.state.generation+1});
   }
 
   onRun = () => {
@@ -102,7 +99,7 @@ export default class BoardComplete extends React.Component  {
       return;
     }
 
-    this.run = setInterval(this.runGenerations, 100)
+    this.run = setInterval(this.runGenerations, 50)
   }
 
   onPause= () => {
@@ -118,14 +115,34 @@ export default class BoardComplete extends React.Component  {
     for(let i=0; i< this.state.alive.length; i++) {
       document.getElementById(this.state.alive[i]).classList.toggle('alive-true');
     }
+    
     this.setState({
       alive: Array.from({length: this.initialSquares}, () => ""+Math.floor(Math.random() * Math.pow(this.sqr, 2)+1)).filter((elem, pos, arr) => arr.indexOf(elem) == pos).sort((a,b) => a-b),
       generation: 0
+    }, () => {
+        for(let j=0; j< this.state.alive.length; j++) {
+          document.getElementById(this.state.alive[j]).classList.toggle('alive-true')
+        }  
     });
   }
 
-  render () { 
+  onSquareClick = (e) => {
+    if(this.run) {
+      return;
+    }
+    let newState;
+    if(document.getElementById(e.target.id).classList[3]){
+      newState = {alive: this.state.alive.filter((el)=> el !== e.target.id+"")}
+    } else {
+      newState = {alive: [...this.state.alive, e.target.id+""].sort((a,b) => a-b)};
+    };
 
+    document.getElementById(e.target.id).classList.toggle('alive-true');
+    this.setState(newState);
+  }
+
+  render () { 
+    console.log(this.state.alive)
     return (
       <div className="col-12">
         <Dashboard generation={this.state.generation} aliveCells={this.state.alive.length} onRun={this.onRun} onPause={this.onPause} onReset={this.onReset}/>

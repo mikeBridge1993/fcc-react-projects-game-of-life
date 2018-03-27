@@ -3,7 +3,50 @@
     min-width: 100px;
     max-width: 100px;
     min-height: 38px;
+    
   }
   font-size: 15px;
+  @media(max-width: $break-small) {
+    display:flex;
+    flex-direction: column;
+    button {
+    margin-top: 10px;
+      
+    }
+    
+  }
+  .card-title {
+    font-family: 'PT Mono', monospace;
+    font-weight: 200;
+    color: black;
+    font-size:15px;
+    
+  }
 
+  
+    h5 {
+      &.card-header{
+        font-size: 15px;
+      }
+    }
+    background: #36D1DC;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #5B86E5, #36D1DC);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #5B86E5, #36D1DC); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+
+.border-purple{
+  border: 1px solid $off-purple;
+}
+
+.bg-purple{
+  background-color:$off-purple;
+}
+
+.border-grey{
+  border: 1px solid darken( whitesmoke, 20%);
+}
+
+.bg-grey{
+  background-color:darken( whitesmoke, 30%);
 }

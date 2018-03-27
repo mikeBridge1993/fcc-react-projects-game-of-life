@@ -1,12 +1,18 @@
 .square {
-  width: 30px;
-  height: 30px;
+  width: 17px;
+  height: 17px;
   border-radius: 15%;
   &:hover {
     background-color: white;
   }
-  background-color: whitesmoke;
-  margin:1px;
+  background-color:darken( whitesmoke, 15%);
+  margin:0.5px;
+
+  @media(max-width: $break-small) {
+      width: 10px;
+      height: 10px;
+      margin:0px;
+  }
 }
 
 .alive-true{
